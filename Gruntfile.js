@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     'string-replace': {
       version: {
         files: {
-          'dist/': 'dist/**',
+          'dist/': 'dist/**/*.js',
         },
         options: {
           replacements: [{
@@ -28,8 +28,10 @@ module.exports = function(grunt) {
 
           // Simple inheritance
           'src/class.js',
+
           // IE9 polyfills
           'src/ie9.js',
+
           // Utils like extend, each, and trigger
           'src/utilities.js',
 
@@ -59,6 +61,9 @@ module.exports = function(grunt) {
           'src/editors/upload.js',
           'src/editors/checkbox.js',
           'src/editors/array/selectize.js',
+          'src/editors/starrating.js',
+          'src/editors/datetime.js',
+          'src/editors/signature.js',
 
           // All the themes and iconlibs
           'src/theme.js',
@@ -86,8 +91,21 @@ module.exports = function(grunt) {
         dest: 'dist/jsoneditor.min.js'
       },
       options: {
-        preserveComments: 'some',
+        preserveComments: function(node, comment) {
+          return /^!|@preserve|@license|@cc_on/i.test(comment.value)
+        },
         sourceMap: true
+      }
+    },
+    cssmin: {
+      options: {
+        shorthandCompacting: false,
+        roundingPrecision: -1
+      },
+      combine: {
+        files: {
+          'dist/css/jsoneditor.min.css': ['src/styles/*.css']
+        }
       }
     },
     watch: {
@@ -104,7 +122,11 @@ module.exports = function(grunt) {
         nonbsp: true,
         nonew: true,
         immed: true,
-        latedef: true
+        latedef: true,
+        globals: {
+            "module": true,
+            "define": true,
+        }
       },
       beforeconcat: [
         'src/class.js',
@@ -180,12 +202,13 @@ module.exports = function(grunt) {
   });
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-string-replace')
+  grunt.loadNpmTasks('grunt-string-replace');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-run');
 
   // Serve files
@@ -196,8 +219,8 @@ module.exports = function(grunt) {
   grunt.registerTask('test', ['run:mocha']);
 
     // Default task.
-  grunt.registerTask('default', ['jshint:beforeconcat','concat','jshint:afterconcat','uglify']);
-  
-  grunt.registerTask('rawbuild', ['concat','uglify']);
-  
+  grunt.registerTask('default', ['jshint:beforeconcat','concat','jshint:afterconcat','uglify','cssmin']);
+
+  grunt.registerTask('rawbuild', ['concat','uglify','cssmin']);
+
 };

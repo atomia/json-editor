@@ -35,7 +35,7 @@ JSONEditor.AbstractTheme = Class.extend({
   },
   getGridRow: function() {
     var el = document.createElement('div');
-    el.className = 'row';
+    el.classList.add('row');
     return el;
   },
   getGridColumn: function() {
@@ -201,7 +201,7 @@ JSONEditor.AbstractTheme = Class.extend({
   },
   getFormControl: function(label, input, description, infoText) {
     var el = document.createElement('div');
-    el.className = 'form-control';
+    el.classList.add('form-control');
     if(label) el.appendChild(label);
     if(input.type === 'checkbox' && label) {
       label.insertBefore(input,label.firstChild);
@@ -257,12 +257,17 @@ JSONEditor.AbstractTheme = Class.extend({
     return el;
   },
   setButtonText: function(button, text, icon, title) {
-    button.innerHTML = '';
+    // Clear previous contents. https://jsperf.com/innerhtml-vs-removechild/37
+    while (button.firstChild) {
+      button.removeChild(button.firstChild);
+    }
     if(icon) {
       button.appendChild(icon);
-      button.innerHTML += ' ';
+      text = ' ' + text;
     }
-    button.appendChild(document.createTextNode(text));
+    var spanEl = document.createElement('span');
+    spanEl.appendChild(document.createTextNode(text));
+    button.appendChild(spanEl);
     if(title) button.setAttribute('title',title);
   },
   getTable: function() {
@@ -393,14 +398,24 @@ JSONEditor.AbstractTheme = Class.extend({
       opacity: 1,
       background: 'white'
     });
-    row.container.style.display = '';
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.style.display = '';
+    }
+    else {
+      row.container.style.display = '';
+    }
   },
   markTabInactive: function(row) {
     this.applyStyles(row.tab,{
       opacity:0.5,
       background: ''
     });
-    row.container.style.display = 'none';
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.style.display = 'none';
+    }
+    else {
+      row.container.style.display = 'none';
+    }
   },
   addTab: function(holder, tab) {
     holder.children[0].appendChild(tab);
@@ -432,5 +447,8 @@ JSONEditor.AbstractTheme = Class.extend({
   },
   getFirstTab: function(holder){
     return holder.firstChild.firstChild;
+  },
+  getInputGroup: function(input, buttons) {
+    return undefined;
   }
 });

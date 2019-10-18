@@ -49,7 +49,7 @@ JSONEditor.defaults.themes.foundation = JSONEditor.AbstractTheme.extend({
   },
   getIndentedPanel: function() {
     var el = document.createElement('div');
-    el.className = 'panel';
+    el.classList.add('panel');
     el.style.paddingBottom = 0;
     return el;
   },
@@ -62,12 +62,12 @@ JSONEditor.defaults.themes.foundation = JSONEditor.AbstractTheme.extend({
   },
   getButtonHolder: function() {
     var el = document.createElement('div');
-    el.className = 'button-group';
+    el.classList.add('button-group');
     return el;
   },
   getButton: function(text, icon, title) {
     var el = this._super(text, icon, title);
-    el.className += ' small button';
+    el.classList.add('small', 'button');
     return el;
   },
   addInputError: function(input,text) {
@@ -75,7 +75,7 @@ JSONEditor.defaults.themes.foundation = JSONEditor.AbstractTheme.extend({
         this.queuedInputErrorText = text;
         return;
     }
-    input.group.className += ' error';
+    input.group.classList.add('error');
 
     if(!input.errmsg) {
       input.insertAdjacentHTML('afterend','<small class="error"></small>');
@@ -92,15 +92,15 @@ JSONEditor.defaults.themes.foundation = JSONEditor.AbstractTheme.extend({
         delete this.queuedInputErrorText;
     }
     if(!input.errmsg) return;
-    input.group.className = input.group.className.replace(/ error/g,'');
+    input.group.classList.remove('error');
     input.errmsg.style.display = 'none';
   },
   getProgressBar: function() {
     var progressBar = document.createElement('div');
-    progressBar.className = 'progress';
+    progressBar.classList.add('progress');
 
     var meter = document.createElement('span');
-    meter.className = 'meter';
+    meter.classList.add('meter');
     meter.style.width = '0%';
     progressBar.appendChild(meter);
     return progressBar;
@@ -112,6 +112,25 @@ JSONEditor.defaults.themes.foundation = JSONEditor.AbstractTheme.extend({
   updateProgressBarUnknown: function(progressBar) {
     if (!progressBar) return;
     progressBar.firstChild.style.width = '100%';
+  },
+  getInputGroup: function(input, buttons) {
+    if (!input) return undefined;
+
+    var inputGroupContainer = document.createElement('div');
+    inputGroupContainer.classList.add('input-group');
+    input.classList.add('input-group-field');
+    inputGroupContainer.appendChild(input);
+
+    for(var i=0;i<buttons.length;i++) {
+      var inputGroup = document.createElement('div');
+      inputGroup.classList.add('input-group-button');
+      inputGroup.style.verticalAlign = 'top';
+      buttons[i].classList.remove('small');   
+      inputGroup.appendChild(buttons[i]);
+      inputGroupContainer.appendChild(inputGroup);
+    }
+
+    return inputGroupContainer;
   }
 });
 
@@ -130,20 +149,20 @@ JSONEditor.defaults.themes.foundation3 = JSONEditor.defaults.themes.foundation.e
   getTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.className = 'row';
+    el.classList.add('row');
     el.innerHTML = '<dl class="tabs vertical two columns" id="' + pName + '"></dl><div class="tabs-content ten columns" id="' + pName + '"></div>';
     return el;
   },
   getTopTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.className = 'row';
+    el.classList.add('row');
     el.innerHTML = '<dl class="tabs horizontal" style="padding-left: 10px; margin-left: 10px;" id="' + pName + '"></dl><div class="tabs-content twelve columns" style="padding: 10px; margin-left: 10px;" id="' + pName + '"></div>';
     return el;
   },
   setGridColumnSize: function(el,size) {
     var sizes = ['zero','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve'];
-    el.className = 'columns '+sizes[size];
+    el.classList.add('columns', sizes[size]);
   },
   getTab: function(text, tabId) {
     var el = document.createElement('dd');
@@ -169,24 +188,35 @@ JSONEditor.defaults.themes.foundation3 = JSONEditor.defaults.themes.foundation.e
   },
   getTabContent: function() {
     var el = document.createElement('div');
-    el.className = 'content active';
+    el.classList.add('content', 'active');
     el.style.paddingLeft = '5px';
     return el;
   },
   getTopTabContent: function() {
     var el = document.createElement('div');
-    el.className = 'content active';
+    el.classList.add('content', 'active');
     el.style.paddingLeft = '5px';
     return el;
   },
   markTabActive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?active/g,'');
-    row.tab.className += ' active';
-    row.container.style.display = '';
+    row.tab.classList.add('active');
+
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.style.display = '';
+    }
+    else {
+      row.container.style.display = '';
+    }
   },
   markTabInactive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?active/g,'');
-    row.container.style.display = 'none';
+    row.tab.classList.remove('active');
+
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.style.display = 'none';
+    }
+    else {
+      row.container.style.display = 'none';
+    }
   },
   addTab: function(holder, tab) {
     holder.children[0].appendChild(tab);
@@ -204,7 +234,7 @@ JSONEditor.defaults.themes.foundation4 = JSONEditor.defaults.themes.foundation.e
     return el;
   },
   setGridColumnSize: function(el,size) {
-    el.className = 'columns large-'+size;
+    el.classList.add('columns', 'large-'+size);
   },
   getFormInputDescription: function(text) {
     var el = this._super(text);
@@ -226,7 +256,7 @@ JSONEditor.defaults.themes.foundation5 = JSONEditor.defaults.themes.foundation.e
     return el;
   },
   setGridColumnSize: function(el,size) {
-    el.className = 'columns medium-'+size;
+    el.classList.add('columns', 'medium-'+size);
   },
   getButton: function(text, icon, title) {
     var el = this._super(text,icon,title);
@@ -242,7 +272,7 @@ JSONEditor.defaults.themes.foundation5 = JSONEditor.defaults.themes.foundation.e
   getTopTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.className = 'row';
+    el.classList.add('row');
     el.innerHTML = '<dl class="tabs horizontal" style="padding-left: 10px;" id="' + pName + '"></dl><div class="tabs-content horizontal" style="padding: 10px;" id="' + pName + '"></div>';
     return el;
   },
@@ -270,24 +300,35 @@ JSONEditor.defaults.themes.foundation5 = JSONEditor.defaults.themes.foundation.e
   },
   getTabContent: function() {
     var el = document.createElement('div');
-    el.className = 'tab-content active';
+    el.classList.add('tab-content', 'active');
     el.style.paddingLeft = '5px';
     return el;
   },
   getTopTabContent: function() {
     var el = document.createElement('div');
-    el.className = 'tab-content active';
+    el.classList.add('tab-content', 'active');
     el.style.paddingLeft = '5px';
     return el;
   },
   markTabActive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?active/g,'');
-    row.tab.className += ' active';
-    row.container.style.display = '';
+    row.tab.classList.add('active');
+
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.style.display = '';
+    }
+    else {
+      row.container.style.display = '';
+    }
   },
   markTabInactive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?active/g,'');
-    row.container.style.display = 'none';
+    row.tab.classList.remove('active');
+
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.style.display = 'none';
+    }
+    else {
+      row.container.style.display = 'none';
+    }
   },
   addTab: function(holder, tab) {
     holder.children[0].appendChild(tab);
@@ -301,13 +342,13 @@ JSONEditor.defaults.themes.foundation5 = JSONEditor.defaults.themes.foundation.e
 JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.extend({
   getIndentedPanel: function() {
     var el = document.createElement('div');
-    el.className = 'callout secondary';
-    el.className.style = 'padding-left: 10px; margin-left: 10px;';
+    el.classList.add('callout', 'secondary');
+    el.style = 'padding-left: 10px; margin-left: 10px;';
     return el;
   },
   getButtonHolder: function() {
     var el = document.createElement('div');
-    el.className = 'button-group tiny';
+    el.classList.add('button-group', 'tiny');
     el.style.marginBottom = 0;
     return el;
   },
@@ -318,7 +359,7 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   },
   getFormControl: function(label, input, description, infoText) {
     var el = document.createElement('div');
-    el.className = 'form-control';
+    el.classList.add('form-control');
     if(label) el.appendChild(label);
     if(input.type === 'checkbox') {
       label.insertBefore(input,label.firstChild);
@@ -336,14 +377,14 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   },
   addInputError: function(input,text) {
     if(!input.group) return;
-    input.group.className += ' error';
+    input.group.classList.add('error');
 
     if(!input.errmsg) {
       var errorEl = document.createElement('span');
-      errorEl.className = 'form-error is-visible';
+      errorEl.classList.add('form-error', 'is-visible');
       input.group.getElementsByTagName('label')[0].appendChild(errorEl);
 
-      input.className = input.className + ' is-invalid-input';
+      input.classList.add('is-invalid-input');
 
       input.errmsg = errorEl;
     }
@@ -356,7 +397,7 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   },
   removeInputError: function(input) {
     if(!input.errmsg) return;
-    input.className = input.className.replace(/ is-invalid-input/g,'');
+    input.classList.remove('is-invalid-input');
     if(input.errmsg.parentNode) {
       input.errmsg.parentNode.removeChild(input.errmsg);
     }
@@ -364,14 +405,14 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   getTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.className = 'grid-x';
+    el.classList.add('grid-x');
     el.innerHTML = '<div class="medium-2 cell" style="float: left;"><ul class="vertical tabs" data-tabs id="' + pName + '"></ul></div><div class="medium-10 cell" style="float: left;"><div class="tabs-content" data-tabs-content="'+pName+'"></div></div>';
     return el;
   },
   getTopTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.className = 'grid-y';
+    el.classList.add('grid-y');
     el.innerHTML = '<div className="cell"><ul class="tabs" data-tabs id="' + pName + '"></ul><div class="tabs-content" data-tabs-content="' + pName + '"></div></div>';
     return el;
 
@@ -382,7 +423,7 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   },
   getTab: function(text, tabId) {
     var el = document.createElement('li');
-    el.className = 'tabs-title';
+    el.classList.add('tabs-title');
     var a = document.createElement('a');
     a.setAttribute('href','#'+tabId);
     a.appendChild(text);
@@ -391,7 +432,7 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   },
   getTopTab: function(text, tabId) {
     var el = document.createElement('li');
-    el.className = 'tabs-title';
+    el.classList.add('tabs-title');
     var a = document.createElement('a');
     a.setAttribute('href','#' + tabId);
     a.appendChild(text);
@@ -406,31 +447,41 @@ JSONEditor.defaults.themes.foundation6 = JSONEditor.defaults.themes.foundation5.
   },
   getTabContent: function() {
     var el = document.createElement('div');
-    el.className = 'tabs-panel';
+    el.classList.add('tabs-panel');
     el.style.paddingLeft = '5px';
     return el;
   },
   getTopTabContent: function() {
     var el = document.createElement('div');
-    el.className = 'tabs-panel';
+    el.classList.add('tabs-panel');
     el.style.paddingLeft = '5px';
     return el;
   },
   markTabActive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?is-active/g,'');
-    row.tab.className += ' is-active';
+    row.tab.classList.add('is-active');
     row.tab.firstChild.setAttribute('aria-selected', 'true');
 
-    row.container.className  = row.container.className.replace(/\s?is-active/g,'');
-    row.container.className += ' is-active';
-    row.container.setAttribute('aria-selected', 'true');
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.classList.add('is-active');
+      row.rowPane.setAttribute('aria-selected', 'true');
+    }
+    else {
+      row.container.classList.add('is-active');
+      row.container.setAttribute('aria-selected', 'true');
+      }
   },
   markTabInactive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?is-active/g,'');
+    row.tab.classList.remove('is-active');
     row.tab.firstChild.removeAttribute('aria-selected');
 
-    row.container.className = row.container.className.replace(/\s?is-active/g,'');
-    row.container.removeAttribute('aria-selected');
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.classList.remove('is-active');
+      row.rowPane.removeAttribute('aria-selected');
+    }
+    else {
+      row.container.classList.remove('is-active');
+      row.container.removeAttribute('aria-selected');
+      }
   },
   addTab: function(holder, tab) {
     holder.children[0].firstChild.appendChild(tab);

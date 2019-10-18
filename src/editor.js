@@ -213,8 +213,7 @@ JSONEditor.AbstractEditor = Class.extend({
       }
     }
   },
-  
-  
+  onMove: function() {},
   getButton: function(text, icon, title) {
     var btnClass = 'json-editor-btn-'+icon;
     if(!this.iconlib) icon = null;
@@ -226,7 +225,7 @@ JSONEditor.AbstractEditor = Class.extend({
     }
     
     var btn = this.theme.getButton(text, icon, title);
-    btn.className += ' ' + btnClass + ' ';
+    btn.classList.add(btnClass);
     return btn;
   },
   setButtonText: function(button, text, icon, title) {
@@ -327,7 +326,7 @@ JSONEditor.AbstractEditor = Class.extend({
       }
     }
     
-    if(data.class) link.className = link.className + ' ' + data.class;
+    if(data.class) link.classList.add(data.class);
 
     return holder;
   },
@@ -483,7 +482,7 @@ JSONEditor.AbstractEditor = Class.extend({
     else if(this.parent && this.parent.schema && Array.isArray(this.parent.schema.required)) return this.parent.schema.required.indexOf(this.key) > -1;
     else if(this.jsoneditor.options.required_by_default) return true;
     else return false;
-  },  
+  },
   getDisplayText: function(arr) {
     var disp = [];
     var used = {};
@@ -524,7 +523,7 @@ JSONEditor.AbstractEditor = Class.extend({
       else if(el.format) name = el.format;
       else if(el.type) name = el.type;
       else if(el.description) name = el.description;
-      else if(JSON.stringify(el).length < 50) name = JSON.stringify(el);
+      else if(JSON.stringify(el).length < 500) name = JSON.stringify(el);
       else name = "type";
       
       disp.push(name);
@@ -540,6 +539,23 @@ JSONEditor.AbstractEditor = Class.extend({
     });
     
     return disp;
+  },
+
+  // Replace space(s) with "-" to create valid id value
+  getValidId: function(id) {
+    id = id === undefined ? "" : id.toString();
+    return id.replace(/\s+/g, "-");
+  },
+  setInputAttributes: function(inputAttribute) {
+    if (this.schema.options && this.schema.options.inputAttributes) {
+      var inputAttributes = this.schema.options.inputAttributes;
+      var protectedAttributes = ['name', 'type'].concat(inputAttribute);
+      for (var key in inputAttributes) {
+        if (inputAttributes.hasOwnProperty(key) && protectedAttributes.indexOf(key.toLowerCase()) == -1) {
+          this.input.setAttribute(key, inputAttributes[key]);
+        }
+      }
+    }
   },
   getOption: function(key) {
     try {

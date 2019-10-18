@@ -7,6 +7,12 @@ JSONEditor.defaults.template = 'default';
 // Default options when initializing JSON Editor
 JSONEditor.defaults.options = {};
 
+JSONEditor.defaults.options.prompt_before_delete = true;
+
+JSONEditor.defaults.options.upload = function(type, file, cbs) {
+  console.log('Upload handler required for upload editor');
+};
+
 // String translate function
 JSONEditor.defaults.translate = function(key, variables) {
   var lang = JSONEditor.defaults.languages[JSONEditor.defaults.language];
@@ -155,6 +161,26 @@ JSONEditor.defaults.languages.en = {
    */
   error_dependency: "Must have property {{0}}",
   /**
+   * When a date is in incorrect format
+   * @variables This key takes one variable: The valid format
+   */
+  error_date: 'Date must be in the format {{0}}',
+  /**
+   * When a time is in incorrect format
+   * @variables This key takes one variable: The valid format
+   */
+  error_time: 'Time must be in the format {{0}}',
+  /**
+   * When a datetime-local is in incorrect format
+   * @variables This key takes one variable: The valid format
+   */
+  error_datetime_local: 'Datetime must be in the format {{0}}',
+  /**
+   * When a integer date is less than 1 January 1970
+   */
+  error_invalid_epoch: 'Date must be greater than 1 January 1970',
+
+  /**
    * Text on Delete All buttons
    */
   button_delete_all: "All",
@@ -201,7 +227,15 @@ JSONEditor.defaults.languages.en = {
   /**
     * Title on Expand buttons
     */
-  button_expand: "Expand"
+  button_expand: "Expand",
+  /**
+    * Title on Flatpickr toggle buttons
+    */
+  flatpickr_toggle_button: "Toggle",
+  /**
+    * Title on Flatpickr clear buttons
+    */
+  flatpickr_clear_button: "Clear"
 };
 
 // Miscellaneous Plugin Settings
@@ -241,6 +275,10 @@ JSONEditor.defaults.resolvers.unshift(function(schema) {
 JSONEditor.defaults.resolvers.unshift(function(schema) {
   // If the schema is a simple type
   if(typeof schema.type === "string") return schema.type;
+});
+// Use specialized editor for signatures
+JSONEditor.defaults.resolvers.unshift(function(schema) {
+  if(schema.type === "string" && schema.format === "signature") return "signature";
 });
 // Use a specialized editor for ratings
 JSONEditor.defaults.resolvers.unshift(function(schema) {
@@ -314,4 +352,14 @@ JSONEditor.defaults.resolvers.unshift(function(schema) {
 JSONEditor.defaults.resolvers.unshift(function(schema) {
   // If this schema uses `oneOf` or `anyOf`
   if(schema.oneOf || schema.anyOf) return "multiple";
+});
+// Specialized editor for date, time and datetime-local formats
+JSONEditor.defaults.resolvers.unshift(function(schema) {
+  if (['string', 'integer'].indexOf(schema.type) !== -1 && ['date', 'time', 'datetime-local'].indexOf(schema.format) !== -1) {
+    return "datetime";
+  }
+});
+// Use a specialized editor for starratings
+JSONEditor.defaults.resolvers.unshift(function(schema) {
+  if (schema.type === "string" && schema.format === "starrating") return "starrating";
 });

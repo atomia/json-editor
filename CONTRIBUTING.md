@@ -9,7 +9,9 @@ When creating an issue in GitHub, try to include when feasible:
 *  An example JSON schema that causes the issue
 *  Steps to reproduce
 
-If you can reproduce the issue on the demo page (http://jeremydorn.com/json-editor/), it's helpful to attach the "Direct Link" url (top right of page).  Note: the direct link might not work for very large schemas or JSON values.
+If you can reproduce the issue on the demo page (http://rawgithub.com/json-editor/json-editor/master/docs/demo.html), it's helpful to attach the "Direct Link" url (top right of page).  Note: the direct link might not work for very large schemas or JSON values.
+
+if your setup is more complex (i.e. setting values using JavaScript interface), you can create a test setup at sites like  https://jsfiddle.net or https://codepen.io/.
 
 
 Contributing Code
@@ -46,3 +48,16 @@ The following is done when a pull request is accepted.  There is no need to do a
 5.  Add a git tag and release for this version with a short changelog
 
 Sometimes, multiple pull requests will be merged before doing steps 2-5.
+
+
+Contributing Use-cases
+--------------------------
+
+Example workflow based on https://github.com/json-editor/json-editor/issues/180#issuecomment-433689965
+
+- One or more reported issues lead to a wiki page, that discusses the design process for a new major release that covers the issues or improvements.
+- The documentation is created before the implementation actually happens.
+- After the design process is aggreed on assignment to specific workpackages are documented in the wiki, ...
+- New developers that want contribute to the new release can work through the Wiki document and know where some contributions are missing or contribute directly to wiki because they identified already some design problems, that may be an obstacle for applications of the library in the future
+- After a major release is finalized the documentation for the release is ready.
+

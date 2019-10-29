@@ -1,12 +1,12 @@
 JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
   getSelectInput: function(options) {
     var el = this._super(options);
-    el.className += 'form-control';
+    el.classList.add('form-control');
     //el.style.width = 'auto';
     return el;
   },
   setGridColumnSize: function(el,size) {
-    el.className = 'col-md-'+size;
+    el.classList.add('col-md-'+size);
   },
   afterInputReady: function(input) {
     if(input.controlgroup) return;
@@ -24,7 +24,7 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
   },
   getTextareaInput: function() {
     var el = document.createElement('textarea');
-    el.className = 'form-control';
+    el.classList.add('form-control');
     return el;
   },
   getRangeInput: function(min, max, step) {
@@ -34,7 +34,7 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
   getFormInputField: function(type) {
     var el = this._super(type);
     if(type !== 'checkbox') {
-      el.className += 'form-control';
+      el.classList.add('form-control');
     }
     return el;
   },
@@ -42,7 +42,7 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
     var group = document.createElement('div');
 
     if(label && input.type === 'checkbox') {
-      group.className += ' checkbox';
+      group.classList.add('checkbox');
       label.appendChild(input);
       label.style.fontSize = '14px';
       group.style.marginTop = '0';
@@ -52,9 +52,9 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
       input.style.cssFloat = 'left';
     }
     else {
-      group.className += ' form-group';
+      group.classList.add('form-group');
       if(label) {
-        label.className += ' control-label';
+        label.classList.add('control-label');
         group.appendChild(label);
       }
 
@@ -68,13 +68,13 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
   },
   getIndentedPanel: function() {
     var el = document.createElement('div');
-    el.className = 'well well-sm';
+    el.classList.add('well', 'well-sm');
     el.style.paddingBottom = 0;
     return el;
   },
   getInfoButton: function(text) {
     var icon = document.createElement('span');
-    icon.className = "glyphicon glyphicon-info-sign pull-right";
+    icon.classList.add('glyphicon', 'glyphicon-info-sign', 'pull-right');
     icon.style.padding = ".25rem";
     icon.style.position = "relative";
     icon.style.display = "inline-block";
@@ -104,7 +104,7 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
   },
   getFormInputDescription: function(text) {
     var el = document.createElement('p');
-    el.className = 'help-block';
+    el.classList.add('help-block');
     el.innerHTML = text;
     return el;
   },
@@ -115,17 +115,17 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
   },
   getButtonHolder: function() {
     var el = document.createElement('div');
-    el.className = 'btn-group';
+    el.classList.add('btn-group');
     return el;
   },
   getButton: function(text, icon, title) {
     var el = this._super(text, icon, title);
-    el.className += 'btn btn-default';
+    el.classList.add('btn', 'btn-default');
     return el;
   },
   getTable: function() {
     var el = document.createElement('table');
-    el.className = 'table table-bordered';
+    el.classList.add('table', 'table-bordered');
     el.style.width = 'auto';
     el.style.maxWidth = 'none';
     return el;
@@ -136,11 +136,10 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
         this.queuedInputErrorText = text;
         return;
     }
-    input.controlgroup.className = input.controlgroup.className.replace(/\s?has-error/g,'');
-    input.controlgroup.className += ' has-error';
+    input.controlgroup.classList.add('has-error');
     if(!input.errmsg) {
       input.errmsg = document.createElement('p');
-      input.errmsg.className = 'help-block errormsg';
+      input.errmsg.classList.add('help-block', 'errormsg');
       input.controlgroup.appendChild(input.errmsg);
     }
     else {
@@ -155,52 +154,86 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
     }
     if(!input.errmsg) return;
     input.errmsg.style.display = 'none';
-    input.controlgroup.className = input.controlgroup.className.replace(/\s?has-error/g,'');
+    input.controlgroup.classList.remove('has-error');
   },
   getTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.innerHTML = "<div class='list-group pull-left' id='" + pName + "'></div><div class='col-sm-10 pull-left' id='" + pName + "'></div>";
+    el.innerHTML = "<ul class='col-md-2 nav nav-pills nav-stacked' id='" + pName + "' role='tablist'></ul>" +
+      "<div class='col-md-10 tab-content well well-small'  id='" + pName + "'></div>";
     return el;
   },
   getTopTabHolder: function(propertyName) {
     var pName = (typeof propertyName === 'undefined')? "" : propertyName;
     var el = document.createElement('div');
-    el.innerHTML = "<ul class='nav nav-tabs' style='padding-left: 10px; margin-left: 10px;' id='" + pName + "'></ul><div class='tab-content' style='overflow:visible;' id='" + pName + "'></div>";
+    el.innerHTML = "<ul class='nav nav-tabs' id='" + pName + "' role='tablist'></ul>" +
+      "<div class='tab-content well well-small'  id='" + pName + "'></div>";
     return el;
   },
   getTab: function(text, tabId) {
-    var el = document.createElement('a');
-    el.className = 'list-group-item';
-    el.setAttribute('href','#'+tabId);
-    el.appendChild(text);
-    return el;
-  },
-  getTopTab: function(text, tabId) {
-    var el = document.createElement('li');
+    var li = document.createElement('li');
+    li.setAttribute('role', 'presentation');
     var a = document.createElement('a');
     a.setAttribute('href','#'+tabId);
     a.appendChild(text);
-    el.appendChild(a);
+    a.setAttribute('aria-controls', tabId);
+    a.setAttribute('role', 'tab');
+    a.setAttribute('data-toggle', 'tab');
+    li.appendChild(a);
+    return li;
+  },
+  getTopTab: function(text, tabId) {
+    var li = document.createElement('li');
+    li.setAttribute('role', 'presentation');
+    var a = document.createElement('a');
+    a.setAttribute('href','#'+tabId);
+    a.appendChild(text);
+    a.setAttribute('aria-controls', tabId);
+    a.setAttribute('role', 'tab');
+    a.setAttribute('data-toggle', 'tab');
+    li.appendChild(a);
+    return li;
+  },
+  getTabContent: function() {
+    var el = document.createElement('div');
+    el.classList.add('tab-pane');
+    el.setAttribute('role', 'tabpanel');
+    return el;
+  },
+  getTopTabContent: function() {
+    var el = document.createElement('div');
+    el.classList.add('tab-pane');
+    el.setAttribute('role', 'tabpanel');
     return el;
   },
   markTabActive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?active/g,'');
-    row.tab.className += ' active';
-    row.container.style.display = '';
+    row.tab.classList.add('active');
+
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.classList.add('active');
+    }
+    else {
+      row.container.classList.add('active');
+    }
   },
   markTabInactive: function(row) {
-    row.tab.className = row.tab.className.replace(/\s?active/g,'');
-    row.container.style.display = 'none';
+    row.tab.classList.remove('active');
+
+    if(typeof row.rowPane !== 'undefined'){
+      row.rowPane.classList.remove('active');
+    }
+    else {
+      row.container.classList.remove('active');
+    }
   },
   getProgressBar: function() {
     var min = 0, max = 100, start = 0;
 
     var container = document.createElement('div');
-    container.className = 'progress';
+    container.classList.add('progress');
 
     var bar = document.createElement('div');
-    bar.className = 'progress-bar';
+    bar.classList.add('progress-bar');
     bar.setAttribute('role', 'progressbar');
     bar.setAttribute('aria-valuenow', start);
     bar.setAttribute('aria-valuemin', min);
@@ -223,9 +256,26 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
     if (!progressBar) return;
 
     var bar = progressBar.firstChild;
-    progressBar.className = 'progress progress-striped active';
+    progressBar.classList.add('progress', 'progress-striped', 'active');
     bar.removeAttribute('aria-valuenow');
     bar.style.width = '100%';
     bar.innerHTML = '';
+  },
+  getInputGroup: function(input, buttons) {
+    if (!input) return;
+
+    var inputGroupContainer = document.createElement('div');
+    inputGroupContainer.classList.add('input-group');
+    inputGroupContainer.appendChild(input);
+
+    var inputGroup = document.createElement('div');
+    inputGroup.classList.add('input-group-btn');
+    inputGroupContainer.appendChild(inputGroup);
+
+    for(var i=0;i<buttons.length;i++) {
+      inputGroup.appendChild(buttons[i]);
+    }
+
+    return inputGroupContainer;
   }
 });

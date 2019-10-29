@@ -1,8 +1,14 @@
+### General information
+
+- json-editor version:
+
 ### Expected behavior
 
 ### Actual behavior
 
 ### Steps to reproduce the behavior
+
+Direct link to example: https://json-editor.github.io/json-editor/
 
 ```javascript
 {

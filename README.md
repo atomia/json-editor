@@ -10,7 +10,7 @@ Some pull requests added from the original repo.
 JSON Editor takes a JSON Schema and uses it to generate an HTML form.  
 It has full support for JSON Schema version 3 and 4 and can integrate with several popular CSS frameworks (bootstrap, foundation, and jQueryUI).
 
-Check out an interactive demo (demo.html): https://json-editor.github.io/json-editor/
+Check out an interactive demo (demo.html): http://rawgithub.com/json-editor/json-editor/master/docs/demo.html
 
 Install
 -----------------
@@ -21,9 +21,11 @@ Install package
 
 Using a CDN
 
-    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
 
-For local usage download the [production version](https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.min.js) or the [development version](https://cdn.jsdelivr.net/npm/@json-editor/json-editor/dist/jsoneditor.js)
+You can also access older releases from CDN, using the landing page: https://www.jsdelivr.com/package/npm/@json-editor/json-editor
+
+For local usage download the [production version](https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js) or the [development version](https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.js)
 
 Requirements
 -----------------
@@ -34,14 +36,17 @@ JSON Editor has no dependencies. It only needs a modern browser (tested in Chrom
 
 The following are not required, but can improve the style and usability of JSON Editor when present.
 
-*  A compatible JS template engine (Mustache, Underscore, Hogan, Handlebars, Swig, Markup, or EJS)
-*  A compatible CSS framework for styling (bootstrap 2/3, foundation 3/4/5, or jqueryui)
-*  A compatible icon library (bootstrap 2/3 glyphicons, foundation icons 2/3, jqueryui, or font awesome 3/4)
+*  A compatible JS template engine (Mustache, Underscore, Hogan, Handlebars, Lodash, Swig, Markup, or EJS)
+*  A compatible CSS framework for styling (bootstrap 2/3/4, foundation 3/4/5/6, materialize or jqueryui)
+*  A compatible icon library (bootstrap 2/3 glyphicons, foundation icons 2/3, jqueryui, materialicons or font awesome 3/4)
 *  [SCEditor](http://www.sceditor.com/) for WYSIWYG editing of HTML or BBCode content
 *  [SimpleMDE](https://simplemde.com/) for editing of Markdown content
 *  [Ace Editor](http://ace.c9.io/) for editing code
 *  [Select2](http://ivaynberg.github.io/select2/) for nicer Select boxes
 *  [Selectize](https://selectize.github.io/selectize.js/) for nicer Select & Array boxes
+*  [Flatpickr](https://flatpickr.js.org/) lightweight and powerful datetime picker
+*  [Signature Pad](https://github.com/szimek/signature_pad) HTML5 canvas based smooth signature drawing
+*  [Cleave.js](https://github.com/nosir/cleave.js) for formatting your **&lt;input/&gt;** content while you are typing
 *  [math.js](http://mathjs.org/) for more accurate floating point math (multipleOf, divisibleBy, etc.)
 
 Usage
@@ -49,11 +54,23 @@ Usage
 
 If you learn best by example, check these out:
 
-*  Basic Usage Example - http://rawgithub.com/jdorn/json-editor/master/examples/basic.html
-*  Advanced Usage Example - http://rawgithub.com/jdorn/json-editor/master/examples/advanced.html
-*  CSS Integration Example - http://rawgithub.com/jdorn/json-editor/master/examples/css_integration.html
+*  Basic Usage Example - http://rawgithub.com/json-editor/json-editor/master/docs/basic.html
+*  ACE Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/ace_editor.html
+*  Advanced Usage Example - http://rawgithub.com/json-editor/json-editor/master/docs/advanced.html
+*  CSS Integration Example - http://rawgithub.com/json-editor/json-editor/master/docs/css_integration.html
+*  Base64 Editor Example (Muiltple Upload) - http://rawgithub.com/json-editor/json-editor/master/docs/multiple_upload_base64.html
+*  Cleave.js Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/cleave.html
+*  Datetime Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/datetime.html
+*  Recursive JSON Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/recursive.html
+*  Select2 Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/select2.html
+*  Selectize Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/selectize.html
+*  Signature Pad Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/signature.html
+*  Star Rating Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/starrating.html
+*  Upload Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/upload.html
+*  WYSIWYG Editor Example - http://rawgithub.com/json-editor/json-editor/master/docs/wysiwyg.html
 
-The rest of this README contains detailed documentation about every aspect of JSON Editor.  For more under-the-hood documentation, check the wiki.
+
+The rest of this README contains detailed documentation about every aspect of JSON Editor.  For more [under-the-hood documentation](https://github.com/json-editor/json-editor/wiki), check the wiki.
 
 ### Initialize
 
@@ -95,6 +112,11 @@ Here are all the available options:
     <td><code>false</code></td>
   </tr>
   <tr>
+    <td>compact</td>
+    <td>If <code>true</code>, the label will not be displayed/added.</td>
+    <td><code>false</code></td>
+  </tr>
+  <tr>
     <td>disable_array_add</td>
     <td>If <code>true</code>, remove all "add row" buttons from arrays.</td>
     <td><code>false</code></td>
@@ -110,6 +132,11 @@ Here are all the available options:
     <td><code>false</code></td>
   </tr>
   <tr>
+    <td>enable_array_copy</td>
+    <td>If <code>true</code>, add copy buttons to arrays.</td>
+    <td><code>false</code></td>
+  </tr>
+  <tr>
     <td>disable_collapse</td>
     <td>If <code>true</code>, remove all collapse buttons from objects and arrays.</td>
     <td><code>false</code></td>
@@ -122,6 +149,12 @@ Here are all the available options:
   <tr>
     <td>disable_properties</td>
     <td>If <code>true</code>, remove all Edit Properties buttons from objects.</td>
+    <td><code>false</code></td>
+  </tr>
+  <tr>
+  <tr>
+    <td>array_controls_top</td>
+    <td>If <code>true</code>, array controls (add, delete etc) will be displayed at top of list.</td>
     <td><code>false</code></td>
   </tr>
   <tr>
@@ -183,6 +216,11 @@ Here are all the available options:
     <td>display_required_only</td>
     <td>If <code>true</code>, only required properties will be included by default.</td>
     <td><code>false</code></td>
+  </tr>
+  <tr>
+    <td>prompt_before_delete</td>
+    <td>If <code>true</code>, displays a dialog box with a confirmation message before node deletion.</td>
+    <td><code>true</code></td>
   </tr>
   </tbody>
 </table>
@@ -280,6 +318,20 @@ editor.watch('path.to.field',function() {
 editor.unwatch('path.to.field',function_reference);
 ```
 
+Or watch all fields (Similar to the "onchange" event, but tracks the field changed)
+
+```javascript
+var watcherCallback = function(path) {
+  console.log("field with path: [" + path + "] changed to [" + JSON.stringify(this.getEditor(path).getValue()) + "]");
+  // Do something
+}
+for (var key in editor.editors) {
+  if (editor.editors.hasOwnProperty(key) && key !== 'root') {
+    editor.watch(key, watcherCallback.bind(editor, key));
+  }
+}
+```
+
 ### Enable and Disable the Editor
 
 This lets you disable editing for the entire form or part of the form.
@@ -325,6 +377,7 @@ The currently supported themes are:
 *  foundation5
 *  foundation6
 *  jqueryui
+*  materialize
 
 The default theme is `html`, which does not rely on an external framework.
 This default can be changed by setting the `JSONEditor.defaults.options.theme` variable.
@@ -357,6 +410,8 @@ The supported icon libs are:
 *  jqueryui
 *  fontawesome3
 *  fontawesome4
+*  fontawesome5
+*  materialicons
 
 By default, no icons are used. Just like the CSS theme, you can set the icon lib globally or when initializing:
 
@@ -569,6 +624,29 @@ Here is an example that will show a color picker in browsers that support it:
 }
 ```
 
+#### String Editors Input Attributes
+
+You can set custom attributes such as **placeholder**, **class** and **data-** on the input field using the special options keyword `inputAttributes`.
+
+Like this:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Full Name",
+      "options": {
+        "inputAttributes": {
+          "placeholder":  "your name here...",
+          "class": "myclass"
+        }
+      }
+    }
+  }
+}
+```
+
 #### Specialized String Editors
 
 In addition to the standard HTML input formats, JSON Editor can also integrate with several 3rd party specialized editors.  These libraries are not included in JSON Editor and you must load them on the page yourself.
@@ -591,19 +669,13 @@ You can configure SCEditor by setting configuration options in `JSONEditor.plugi
 JSONEditor.plugins.sceditor.emoticonsEnabled = false;
 ```
 
-__EpicEditor__ is a simple Markdown editor with live preview.  To use it, set the format to `markdown`:
+__SimpleMDE__ is a simple Markdown editor with live preview.  To use it, set the format to `markdown`:
 
 ```json
 {
   "type": "string",
   "format": "markdown"
 }
-```
-
-You can configure EpicEditor by setting configuration options in `JSONEditor.plugins.epiceditor`.  Here's an example:
-
-```js
-JSONEditor.plugins.epiceditor.basePath = 'epiceditor';
 ```
 
 __Ace Editor__ is a syntax highlighting source code editor. You can use it by setting the format to any of the following:
@@ -680,6 +752,23 @@ You can override the default Ace theme by setting the `JSONEditor.plugins.ace.th
 
 ```js
 JSONEditor.plugins.ace.theme = 'twilight';
+```
+
+You can enable [Ace editor options](https://github.com/ajaxorg/ace/wiki/Configuring-Ace) individually by setting the `options.ace` in schema.
+
+```json
+{
+  "type": "string",
+  "format": "sql",
+  "options": {
+    "ace": {
+      "theme": "ace/theme/vibrant_ink",
+      "tabSize": 2,
+      "useSoftTabs": true,
+      "wrap": true
+    }
+  }
+}
 ```
 
 #### Booleans
@@ -795,6 +884,7 @@ Editors can accept options which alter the behavior in some way.
 *  `disable_collapse` - If set to true, the collapse button will be hidden (works for objects and arrays)
 *  `disable_edit_json` - If set to true, the Edit JSON button will be hidden (works for objects)
 *  `disable_properties` - If set to true, the Edit Properties button will be hidden (works for objects)
+*  `array_controls_top` - If set to true, array controls (add, delete etc) will be displayed at top of list (works for arrays)
 *  `enum_titles` - An array of display values to use for select box options in the same order as defined with the `enum` keyword. Works with schema using enum values.
 *  `expand_height` - If set to true, the input will auto expand/contract to fit the content.  Works best with textareas.
 *  `grid_columns` - Explicitly set the number of grid columns (1-12) for the editor if it's within an object using a grid layout.
@@ -1152,6 +1242,27 @@ By default, all instances of JSON Editor will use the `en` language.  To overrid
 
 ```js
 JSONEditor.defaults.language = "es";
+```
+
+Button Custimization
+-----------------
+
+All buttons have classnames in the format `json-editor-btntype-*`. Using these classnames you can choose if the button should have icon or label hidden. The icon is wrapped in an `I` tag, the label is wrapped in a `SPAN` tag.
+
+Examples:
+
+Hide the icon on "Object Properties" button:
+```css
+.json-editor-btntype-properties i {
+  display: none;
+}
+```
+
+Hide the text on "Object Properties" button:
+```css
+.json-editor-btntype-properties span {
+  display: none;
+}
 ```
 
 Custom Editor Interfaces

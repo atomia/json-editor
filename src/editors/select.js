@@ -12,10 +12,13 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
       return;
     }
 
+    if(initial) this.is_dirty = false;
+    else if(this.jsoneditor.options.show_errors === "change") this.is_dirty = true;
+
     this.input.value = this.enum_options[this.enum_values.indexOf(sanitized)];
     if(this.select2) {
       if(this.select2v4)
-        this.select2.val(this.input.value).trigger("change"); 
+        this.select2.val(this.input.value).trigger("change");
       else
         this.select2.select2('val',this.input.value);
     }
@@ -166,7 +169,7 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     if(!this.options.compact) this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
     if(this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
     if(this.options.infoText) this.infoButton = this.theme.getInfoButton(this.options.infoText);
-    if(this.options.compact) this.container.className += ' compact';
+    if(this.options.compact) this.container.classList.add('compact');
 
     this.input = this.theme.getSelectInput(this.enum_options);
     this.theme.setSelectOptions(this.input,this.enum_options,this.enum_display);
@@ -175,6 +178,9 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
       this.always_disabled = true;
       this.input.disabled = true;
     }
+
+    // Set custom attributes on input element. Parameter is array of protected keys. Empty array if none.
+    this.setInputAttributes([]);
 
     this.input.addEventListener('change',function(e) {
       e.preventDefault();
@@ -192,15 +198,17 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
 
     var new_val;
     // Invalid option, use first option instead
-    if(this.enum_options.indexOf(val) === -1) {
+    if(this.enum_values.indexOf(val) === -1) {
       new_val = this.enum_values[0];
     }
     else {
-      new_val = this.enum_values[this.enum_options.indexOf(val)];
+      new_val = this.enum_values[this.enum_values.indexOf(val)];
     }
 
     // If valid hasn't changed
     if(new_val === this.value) return;
+
+    this.is_dirty = true;
 
     // Store new value and propogate change event
     this.value = new_val;
@@ -288,10 +296,10 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
 
               // Rendered value
               if(this.enumSource[i].value) {
-                item_values[j] = this.enumSource[i].value({
+                item_values[j] = this.typecast(this.enumSource[i].value({
                   i: j,
                   item: item
-                });
+                }));
               }
               // Use value directly
               else {
@@ -382,5 +390,27 @@ JSONEditor.defaults.editors.select = JSONEditor.AbstractEditor.extend({
     }
 
     this._super();
+  },
+  showValidationErrors: function (errors) {
+    var self = this;
+
+    if (this.jsoneditor.options.show_errors === "always") {}
+    else if(!this.is_dirty && this.previous_error_setting===this.jsoneditor.options.show_errors) return;
+
+    this.previous_error_setting = this.jsoneditor.options.show_errors;
+
+    var messages = [];
+    $each(errors, function (i, error) {
+      if (error.path === self.path) {
+        messages.push(error.message);
+      }
+    });
+
+    if (messages.length) {
+      this.theme.addInputError(this.input, messages.join('. ') + '.');
+    }
+    else {
+      this.theme.removeInputError(this.input);
+    }
   }
 });
